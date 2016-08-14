@@ -1,0 +1,1 @@
+sqlite3 ../database/thirteenf_db.sqlite "delete from filings where periodofreport='2016-03-31';"
