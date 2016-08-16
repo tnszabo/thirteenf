@@ -11,12 +11,12 @@ flngs = conn.thirteenfdb.filings
 # convert result to list
 # convert list to dataframe
 
-fl = flngs.find({}, {"cik":1,"manager_name":1, "_id":0}).distinct("cik")
-#print "all current managers:", pd.DataFrame(list(fl))
+fl = flngs.find({}, {"cik":1,"manager_name":1, "_id":0}).distinct("manager_name")
+print "all current managers:", pd.DataFrame(list(fl))
 
 # select distinct periodofreport
 fl = flngs.find({}, {"periodofreport":1, "_id":0}).distinct("periodofreport")
-#print "all periodofreport:", pd.DataFrame(list(fl))
+print "all periodofreport:", pd.DataFrame(list(fl))
 
 #print "pivot by period"
 fl = flngs.find({}, \
@@ -32,11 +32,11 @@ fl = flngs.find({"holdings.nameofissuer":"APPLE INC"},
     "val":"$holdings.value", 
     "_id":0})
 aapl = pd.DataFrame(list(fl))
-print "APPLE", aapl
+#print "APPLE", aapl
 
 # select * 2016q1
 fl = flngs.find(
-    {"periodofreport":"2016-03-31"}, 
+    {"periodofreport":"2016-06-30"}, 
     {"holdings.nameofissuer":1, "_id":0})
 q1 = pd.DataFrame(list(fl))
 #q1 = q1.sort_values(['manager_name'], ascending=[True])
@@ -44,7 +44,7 @@ q1 = pd.DataFrame(list(fl))
 print "pipeline - names with greatest overlap"
 pipeline = [ 
         {"$match":
-            { "periodofreport":"2016-03-31"}},\
+            { "periodofreport":"2016-06-30"}},\
         {"$unwind":"$holdings"},
         {"$group": 
             { "_id":"$holdings.nameofissuer", 
@@ -53,12 +53,12 @@ pipeline = [
     ]
 fl = flngs.aggregate(pipeline)
 df = pd.DataFrame(list(fl))
-print df.head(10)
+#print df.head(10)
 
 print "pipeline - flatten holdings"
 pipeline = [ 
         {"$match":
-            { "periodofreport":"2016-03-31", "tablevaluetotal":{"$gt":0}} },
+            { "periodofreport":"2016-06-30", "tablevaluetotal":{"$gt":0}} },
         {"$unwind":"$holdings"},
         {"$project": { "_id":0,
             "manager_name":1,
@@ -74,7 +74,7 @@ fl = flngs.aggregate(pipeline)
 df = pd.DataFrame(list(fl))
 
 print "Most concentrated positions"
-print df.sort_values(['manager_name', 'Pct_Filing'], ascending=[True,False])
+#print df.sort_values(['manager_name', 'Pct_Filing'], ascending=[True,False])
 
 print "Positions greater than 6%"
-print df[df.Pct_Filing > 0.06].sort_values([ 'Pct_Filing'], ascending=[False])
+#print df[df.Pct_Filing > 0.06].sort_values([ 'Pct_Filing'], ascending=[False])

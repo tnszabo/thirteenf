@@ -139,6 +139,21 @@ def _xml_tojson(filing):
             # oFiling.pop('amendmentno',None)
     return json
 
+def _json_togoogjson(json):
+    # convert to df
+    # flatten df
+    # convery to goog json
+    goog = {}
+    cols = []
+    for col in json.keys():
+        cols.append({"label":col,"type":type(col)})
+    goog['cols'] = cols
+    rows = []
+    for row in json:
+        rows.append({"c":row.value})
+    goog['rows'] = rows
+    return goog
+    
 def _json_todf(json):
     df = pd.read_json(json.dumps(json))
     return df
@@ -153,7 +168,7 @@ def _get_filing_as_list(url):
         mgr_name = filing.findtext('//name')
         info_tables = filing.find( '//informationtable')
         # create header row
-        filings = [["Manager","MgrCik","Period","CUSIP","Name","Class","PutCall","Value","Shares"]]
+        filings = [["Manager_name","Cik","Period","CUSIP","Name","Class","PutCall","Value","Shares"]]
         for entry in info_tables:
             rawHolding = []
             a = rawHolding.append

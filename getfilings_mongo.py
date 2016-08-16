@@ -1,15 +1,13 @@
-import getedgarfiling as ed
+import lib.getedgarfiling as ed
 import datetime
-import thirteenf_mongo as db
+import lib.thirteenf_mongo as db
 
 conn = db.getDbConn()
 dbf = conn.filings
 dbm = conn.managers
 
 # get list of managers
-ciklist = dbf.distinct("cik")
-if not ciklist:
-    ciklist = dbm.distinct("cik")
+ciklist = dbm.distinct("cik")
 print "Manager ciks:", ciklist
 
 # calculate last quarter end date
@@ -21,10 +19,10 @@ filing = ''
 print 'ciks:', len(ciklist)
 ctrHoldings = 0
 start =  datetime.datetime.now()
-for cik in ciklist:    
+for cik in ciklist:
+    myfiling = ed.get_filing_as_json(cik)
     if dbf.find({"cik":cik, "periodofreport":lastPeriod}).limit(1).count() == 0:
         myfiling = ed.get_filing_as_json(cik)
-        
         if myfiling['periodofreport']==lastPeriod:
             myfiling['batch']=start
             

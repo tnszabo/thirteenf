@@ -4,8 +4,8 @@ import datetime
 import pandas as pd
 
 # get cik from db
-ciklist = db.getMgrCiks()
-
+ciklist = db.getMgrs()
+print ciklist
 ctrHoldings = 0
 start =  datetime.datetime.now()
 if not ciklist:

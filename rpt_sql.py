@@ -20,7 +20,7 @@ print pivot
 
 print "q12016"
 q1 = pd.read_sql_query("select manager_name, nameofissuer, value, tablevaluetotal from filings \
-where periodofreport='2016-03-31'", conn)
+where periodofreport='2016-06-30'", conn)
 q1 = q1.sort_values(['manager_name', 'value'], ascending=[True,False])
 
 print "add pct_filing:" 
@@ -28,12 +28,11 @@ q1['Pct_Filing'] = q1.value/q1.tablevaluetotal
 #print q1
 
 print "greater than 7%:"
-print q1[q1.Pct_Filing > 0.07]
+#print q1[q1.Pct_Filing > 0.07]
 
 print "top ten for each mgr"
 c['Pct_Filing'] = c.value/c.tablevaluetotal
 topten = c.groupby('manager_name').head(10)
-print topten
 
 print "longevity of top ten"
 pivot = pd.pivot_table(topten, index = ['manager_name','nameofissuer'], 

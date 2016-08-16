@@ -12,7 +12,7 @@ import pandas as pd
 # 6.    if filing is for last quarter, save
 
 # get list of MgrCiks from db
-ciklist = db.getMgrs()
+ciklist = db.getMgrCiks()
 print 'ciks:', len(ciklist)
 # calculate last quarter end date
 lastPeriod = ed.previous_quarter(datetime.datetime.today() - datetime.timedelta(days=45))
